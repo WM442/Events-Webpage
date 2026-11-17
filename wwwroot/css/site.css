@@ -34,7 +34,7 @@ body {
     width: 90%;
     border: 5px solid red;
     display: flex;
-    overflow-x: auto;
+    overflow: hidden;
 }
 
 .group{
@@ -42,11 +42,11 @@ body {
     align-items: center;
     justify-content: center;
     gap: 1em;
-    animation: spin 5s infinite linear;
+    animation: spin 30s infinite linear;
     padding-right:1em;
 }
 
-.card{
+.carousel-card{
     flex: 0 0 5em;
     height: 5em;
     padding: 1em;
