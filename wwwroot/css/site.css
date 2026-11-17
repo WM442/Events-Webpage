@@ -1,0 +1,63 @@
+* {
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 14px;
+    position: relative;
+    min-height: 100%;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+body {
+    margin-bottom: 60px;
+}
+
+
+.btn-ntu {
+    background-color: deeppink;
+    color: white;
+}
+
+.btn-ntu-size {
+    font-size: 40px;
+    font-family: AppleGothic;
+}
+
+.carousel{
+    margin: 100px auto;
+    width: 90%;
+    border: 5px solid red;
+    display: flex;
+    overflow-x: auto;
+}
+
+.group{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1em;
+    animation: spin 5s infinite linear;
+    padding-right:1em;
+}
+
+.card{
+    flex: 0 0 5em;
+    height: 5em;
+    padding: 1em;
+    background: cornflowerblue;
+    font-size: 3rem;
+    border-radius: .2rem;
+    text-align: center;
+    align-content: center;
+}
+
+@keyframes spin{
+    from {translate: 0;}
+    to {translate: -100%}
+}

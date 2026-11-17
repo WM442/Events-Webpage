@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@5"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    
+    <!-- Development-only CSS cache-busting: the loader adds a fresh
+         timestamp on every page load, including CSS files pulled in with
+         @import. Add more local stylesheets to data-css if needed. -->
+    <script src="js/css-loader.js" data-css="css/site.css"></script>
+    <noscript><link rel="stylesheet" href="css/site.css" /></noscript>
+
+    <title>Contact Us - Event App</title>
+  </head>
+  <body>
+    <!-- Hero Section -->
+    <div class="hero min-h-48 bg-base-200">
+      <div class="hero-content text-center">
+        <div class="max-w-md mb-4">
+          <h1 class="text-5xl font-bold">Contact Us</h1>
+          <p class="py-6">Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact Form Section -->
+    <section class="container mx-auto px-4 py-8 max-w-2xl">
+      <div class="card bg-base-100 border border-gray-200 shadow-lg">
+        <div class="card-body">
+          <form>
+            <div class="form-control mb-4">
+              <label class="label">
+                <span class="label-text">Name</span>
+              </label>
+              <input type="text" placeholder="Your name" class="input input-bordered" required />
+            </div>
+
+            <div class="form-control mb-4">
+              <label class="label">
+                <span class="label-text">Email</span>
+              </label>
+              <input type="email" placeholder="your.email@example.com" class="input input-bordered" required />
+            </div>
+
+            <div class="form-control mb-4">
+              <label class="label">
+                <span class="label-text">Subject</span>
+              </label>
+              <input type="text" placeholder="Message subject" class="input input-bordered" required />
+            </div>
+
+            <div class="form-control mb-6">
+              <label class="label">
+                <span class="label-text">Message</span>
+              </label>
+              <textarea class="textarea textarea-bordered h-32" placeholder="Your message" required></textarea>
+            </div>
+
+            <div class="form-control">
+              <button type="submit" class="btn btn-primary btn-lg w-full">Send Message</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <script src="js/site.js"></script>
+  </body>
+</html>

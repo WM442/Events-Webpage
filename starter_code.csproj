@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Reference Include="api">
+            <HintPath>./modules/api/api.dll</HintPath>
+        </Reference>
+        <Reference Include="Tracker">
+            <HintPath>./modules/Tracker/Tracker.dll</HintPath>
+        </Reference>
+        <Reference Include="ApiChecker">
+            <HintPath>./modules/ApiChecker/ApiChecker.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+
+    <!-- Runtime dependencies of modules/api/api.dll, restored by NuGet
+         instead of hand-copying a folder of dependency DLLs. -->
+
+</Project>

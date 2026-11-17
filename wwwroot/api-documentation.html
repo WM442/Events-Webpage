@@ -1,0 +1,2309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events API Documentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 280px;
+            background-color: #2d3748;
+            color: white;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .sidebar-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 2rem 1.5rem;
+        }
+
+        .sidebar-header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-header p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .sidebar nav {
+            padding: 1.5rem 0;
+        }
+
+        .sidebar nav ul {
+            list-style: none;
+        }
+
+        .sidebar nav li {
+            margin-bottom: 0.25rem;
+        }
+
+        .sidebar nav a {
+            display: block;
+            color: #e2e8f0;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar nav a:hover {
+            background-color: #4a5568;
+            border-left-color: #667eea;
+            color: white;
+        }
+
+        .sidebar nav a.active {
+            background-color: #4a5568;
+            border-left-color: #667eea;
+            color: white;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            flex: 1;
+            background-color: white;
+            min-height: 100vh;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        main {
+            padding: 2rem;
+            max-width: 1200px;
+        }
+
+        section {
+            margin-bottom: 3rem;
+            scroll-margin-top: 2rem;
+        }
+
+        h2 {
+            color: #667eea;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid #667eea;
+        }
+
+        h3 {
+            color: #764ba2;
+            font-size: 1.5rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        h4 {
+            color: #2d3748;
+            font-size: 1.2rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        h5 {
+            color: #4a5568;
+            font-size: 1rem;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        .badge-required {
+            background-color: #fc8181;
+            color: white;
+        }
+
+        .badge-optional {
+            background-color: #68d391;
+            color: white;
+        }
+
+        .badge-get {
+            background-color: #4299e1;
+            color: white;
+        }
+
+        .badge-post {
+            background-color: #48bb78;
+            color: white;
+        }
+
+        .badge-put {
+            background-color: #ed8936;
+            color: white;
+        }
+
+        .badge-patch {
+            background-color: #9f7aea;
+            color: white;
+        }
+
+        .badge-delete {
+            background-color: #e53e3e;
+            color: white;
+        }
+
+        .badge-auth-yes {
+            background-color: #fc8181;
+            color: white;
+        }
+
+        .badge-auth-no {
+            background-color: #68d391;
+            color: white;
+        }
+
+        .endpoint-card {
+            background-color: #f7fafc;
+            border-left: 4px solid #667eea;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-radius: 4px;
+        }
+
+        .endpoint-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .endpoint-method {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .endpoint-path {
+            font-family: 'Courier New', monospace;
+            background-color: #2d3748;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.95rem;
+        }
+
+        pre {
+            background-color: #2d3748;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        code {
+            background-color: #2d3748;
+            color: #e2e8f0;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            background-color: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background-color: #f7fafc;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+        }
+
+        .alert-info {
+            background-color: #bee3f8;
+            border-left: 4px solid #4299e1;
+            color: #2c5282;
+        }
+
+        .alert-warning {
+            background-color: #feebc8;
+            border-left: 4px solid #ed8936;
+            color: #7c2d12;
+        }
+
+        .alert-success {
+            background-color: #c6f6d5;
+            border-left: 4px solid #48bb78;
+            color: #22543d;
+        }
+
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .comparison-card {
+            background-color: #f7fafc;
+            padding: 1rem;
+            border-radius: 4px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .comparison-card h4 {
+            margin-top: 0;
+        }
+
+        ul, ol {
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        .field-list {
+            background-color: #f7fafc;
+            padding: 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+        }
+
+        .field-list p {
+            margin-bottom: 0.5rem;
+        }
+
+        footer {
+            background-color: #2d3748;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background-color: #667eea;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: background-color 0.3s;
+            z-index: 999;
+        }
+
+        .back-to-top:hover {
+            background-color: #764ba2;
+        }
+
+        .quick-ref {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .menu-toggle {
+                display: block;
+                position: fixed;
+                top: 1rem;
+                left: 1rem;
+                z-index: 1001;
+                background-color: #667eea;
+                color: white;
+                border: none;
+                padding: 0.5rem 1rem;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+        }
+
+        .menu-toggle {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h1>Events API</h1>
+                <p>SOFT20181 Documentation</p>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#overview">Overview</a></li>
+                    <li><a href="#getting-started">Getting Started</a></li>
+                    <li><a href="#authentication">Authentication</a></li>
+                    <li><a href="#data-models">Data Models</a></li>
+                    <li><a href="#auth-endpoints">Auth Endpoints</a></li>
+                    <li><a href="#events-endpoints">Events Endpoints</a></li>
+                    <li><a href="#organizers-endpoints">Organizers Endpoints</a></li>
+                    <li><a href="#comments-endpoints">Comments Endpoints</a></li>
+                    <li><a href="#messages-endpoints">Messages Endpoints</a></li>
+                    <li><a href="#config-endpoints">Config Endpoints</a></li>
+                    <li><a href="#relationships">Working with Relationships</a></li>
+                    <li><a href="#errors">Error Handling</a></li>
+                    <li><a href="#quick-reference">Quick Reference</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <button class="menu-toggle" id="menuToggle">Menu</button>
+
+            <header>
+                <h1>Events API Documentation</h1>
+                <p>Complete reference guide for SOFT20181 Events API</p>
+            </header>
+
+            <main>
+                <!-- Overview Section -->
+                <section id="overview">
+                    <h2>Overview</h2>
+                    <p>The Events API is a RESTful API built with ASP.NET Core that manages events, organizers, comments, and messages. This API uses SQLite as its database and supports related data fetching.</p>
+
+                    <h3>Key Features</h3>
+                    <ul>
+                        <li>Event management with filtering capabilities</li>
+                        <li>Organizer profiles with their associated events</li>
+                        <li>Comment system for events</li>
+                        <li>Message/contact system</li>
+                        <li>Token-based authentication</li>
+                        <li>Database management utilities</li>
+                    </ul>
+                </section>
+
+                <!-- Getting Started Section -->
+                <section id="getting-started">
+                    <h2>Getting Started</h2>
+
+                    <h3>Base URL</h3>
+                    <pre><code>http://localhost:5201/api</code></pre>
+
+                    <h3>API Documentation UI</h3>
+                    <p>This page is the complete API guide. The starter app serves it at:</p>
+                    <pre><code>http://localhost:5201/api-documentation.html</code></pre>
+
+                    <h3>Calling the API from Live Server or another app</h3>
+                    <p>The API allows browser calls from <strong>any origin, port, method, and request header</strong> through CORS. If your HTML is served by VS Code Live Server rather than this app, call the API with its absolute address (for example, <code>http://localhost:5201/api/events</code>), not a relative <code>/api/events</code> path. Protected endpoints still require a valid Bearer token.</p>
+
+                    <h3>CSS changes while developing</h3>
+                    <p>The starter HTML pages load local CSS through <code>js/css-loader.js</code>, which adds the current time as a version query and fetches the CSS without using the browser cache, including stylesheets pulled in by CSS <code>@import</code>. Add more local stylesheets to the loader's <code>data-css</code> list when needed.</p>
+
+                    <h3>Content Type</h3>
+                    <p>All requests and responses use JSON format:</p>
+                    <pre><code>Content-Type: application/json</code></pre>
+                </section>
+
+                <!-- Authentication Section -->
+                <section id="authentication">
+                    <h2>Authentication</h2>
+                    <p>Most endpoints require authentication using a Bearer token.</p>
+
+                    <h3>How Authentication Works</h3>
+                    <ol>
+                        <li>Create an Auth Token (see Auth Endpoints section)</li>
+                        <li>Include the Token in Requests:</li>
+                    </ol>
+                    <pre><code>Authorization: Bearer your-token-here</code></pre>
+
+                    <h3>Which Endpoints Require Authentication?</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Endpoint</th>
+                                <th>Authentication Required</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>/api/auth</code></td>
+                                <td><span class="badge badge-auth-no">No</span></td>
+                            </tr>
+                            <tr>
+                                <td><code>/api/messages</code></td>
+                                <td><span class="badge badge-auth-no">No</span></td>
+                            </tr>
+                            <tr>
+                                <td><code>/api/auth/{id}</code> and <code>/api/messages/{id}</code> (PUT/PATCH/DELETE)</td>
+                                <td><span class="badge badge-auth-yes">Yes</span></td>
+                            </tr>
+                            <tr>
+                                <td><code>/api/events</code></td>
+                                <td><span class="badge badge-auth-yes">Yes</span></td>
+                            </tr>
+                            <tr>
+                                <td><code>/api/organizers</code></td>
+                                <td><span class="badge badge-auth-yes">Yes</span></td>
+                            </tr>
+                            <tr>
+                                <td><code>/api/comments</code></td>
+                                <td><span class="badge badge-auth-yes">Yes</span></td>
+                            </tr>
+                            <tr>
+                                <td><code>/api/config</code></td>
+                                <td><span class="badge badge-auth-no">No</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <!-- Data Models Section -->
+                <section id="data-models">
+                    <h2>Data Models</h2>
+
+                    <h3>Event</h3>
+                    <pre><code>{
+  "id": 1,
+  "category": "Tech",
+  "title": "Web Development Workshop",
+  "description": "Learn modern web development techniques",
+  "location": "London",
+  "eventDate": "2025-12-15T14:00:00",
+  "organizerId": 5,
+  "imageUrls": "https://example.com/image1.jpg",
+  "organizer": { /* Organizer object */ },
+  "comments": [ /* Array of Comment objects */ ],
+  "images": ["https://example.com/image1.jpg"]
+}</code></pre>
+
+                    <div class="field-list">
+                        <p><strong>id</strong> <span class="badge badge-optional">auto-generated</span> - Unique event identifier</p>
+                        <p><strong>category</strong> <span class="badge badge-required">required</span> - Event category (e.g., "Tech", "Sport", "Music")</p>
+                        <p><strong>title</strong> <span class="badge badge-required">required</span> - Event title</p>
+                        <p><strong>description</strong> <span class="badge badge-required">required</span> - Event description</p>
+                        <p><strong>location</strong> <span class="badge badge-required">required</span> - Event location</p>
+                        <p><strong>eventDate</strong> <span class="badge badge-optional">optional</span> - When the event occurs</p>
+                        <p><strong>organizerId</strong> <span class="badge badge-optional">optional</span> - ID of the organizer</p>
+                        <p><strong>imageUrls</strong> <span class="badge badge-optional">optional</span> - Comma-separated image URLs (e.g., "url1,url2,url3"). Returns as <code>images</code> array in response.</p>
+                        <p><strong>organizer</strong> - Related organizer data (not stored)</p>
+                        <p><strong>comments</strong> - Related comments (not stored)</p>
+                        <p><strong>images</strong> - Parsed array of image URLs from <code>imageUrls</code> (not stored)</p>
+                    </div>
+
+                    <h3>Organizer</h3>
+                    <pre><code>{
+  "id": 1,
+  "fullname": "John Smith",
+  "email": "john@example.com",
+  "imageUrl": "https://example.com/avatar.jpg",
+  "events": [ /* Array of Event objects */ ]
+}</code></pre>
+
+                    <div class="field-list">
+                        <p><strong>id</strong> <span class="badge badge-optional">auto-generated</span> - Unique organizer identifier</p>
+                        <p><strong>fullname</strong> <span class="badge badge-required">required</span> - Organizer's full name</p>
+                        <p><strong>email</strong> <span class="badge badge-required">required</span> - Valid email address</p>
+                        <p><strong>imageUrl</strong> <span class="badge badge-optional">optional</span> - URL to organizer's profile image</p>
+                        <p><strong>events</strong> - Related events organized by this person (not stored)</p>
+                    </div>
+
+                    <h3>Comment</h3>
+                    <pre><code>{
+  "id": 1,
+  "eventId": 10,
+  "author": "Jane Doe",
+  "content": "Great event! Looking forward to it.",
+  "event": { /* Event object */ }
+}</code></pre>
+
+                    <div class="field-list">
+                        <p><strong>id</strong> <span class="badge badge-optional">auto-generated</span> - Unique comment identifier</p>
+                        <p><strong>eventId</strong> <span class="badge badge-required">required</span> - ID of the event being commented on</p>
+                        <p><strong>author</strong> <span class="badge badge-required">required</span> - Name of the comment author</p>
+                        <p><strong>content</strong> <span class="badge badge-required">required</span> - Comment text</p>
+                        <p><strong>event</strong> - Related event data (not stored)</p>
+                    </div>
+
+                    <h3>Message</h3>
+                    <pre><code>{
+  "id": 1,
+  "fullname": "Alice Johnson",
+  "email": "alice@example.com",
+  "phone": "+441234567890",
+  "content": "I have a question about your events."
+}</code></pre>
+
+                    <div class="field-list">
+                        <p><strong>id</strong> <span class="badge badge-optional">auto-generated</span> - Unique message identifier</p>
+                        <p><strong>fullname</strong> <span class="badge badge-required">required</span> - Sender's full name</p>
+                        <p><strong>email</strong> <span class="badge badge-required">required</span> - Valid email address</p>
+                        <p><strong>phone</strong> <span class="badge badge-optional">optional</span> - Contact phone number</p>
+                        <p><strong>content</strong> <span class="badge badge-required">required</span> - Message content</p>
+                    </div>
+
+                    <h3>AuthToken</h3>
+                    <pre><code>{
+  "id": 1,
+  "fullname": "Developer User",
+  "token": "123e4567-e89b-12d3-a456-426614174000"
+}</code></pre>
+
+                    <div class="field-list">
+                        <p><strong>id</strong> <span class="badge badge-optional">auto-generated</span> - Unique token identifier</p>
+                        <p><strong>fullname</strong> <span class="badge badge-required">required</span> - User's full name</p>
+                        <p><strong>token</strong> <span class="badge badge-optional">auto-generated</span> - Authentication token (GUID)</p>
+                    </div>
+                </section>
+
+                <!-- Auth Endpoints -->
+                <section id="auth-endpoints">
+                    <h2>Auth Endpoints</h2>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method badge badge-post">POST</span>
+                            <span class="endpoint-path">/api/auth</span>
+                            <span class="badge badge-auth-no">No Auth Required</span>
+                        </div>
+
+                        <h3>Create Authentication Token</h3>
+                        <p><strong>Use Case:</strong> Generate a new authentication token for API access. Create a token before accessing protected endpoints (Events, Organizers, Comments).</p>
+
+                        <h4>Request Body</h4>
+                        <pre><code>{
+  "fullname": "John Developer"
+}</code></pre>
+
+                        <h4>Response (200 OK)</h4>
+                        <pre><code>{
+  "id": 1,
+  "fullname": "John Developer",
+  "token": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+}</code></pre>
+
+                        <h4>Example (cURL)</h4>
+                        <pre><code>curl -X POST http://localhost:5201/api/auth \
+  -H "Content-Type: application/json" \
+  -d '{"fullname": "John Developer"}'</code></pre>
+
+                        <h4>Example (.http file)</h4>
+                        <pre><code>POST http://localhost:5201/api/auth
+Content-Type: application/json
+
+{
+  "fullname": "John Developer"
+}</code></pre>
+
+                        <h4>Example (JavaScript Fetch)</h4>
+                        <pre><code>const response = await fetch('http://localhost:5201/api/auth', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    fullname: 'John Developer'
+  })
+});
+
+const data = await response.json();
+console.log('Your token:', data.token);
+// Save this token for future requests!</code></pre>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method badge badge-put">PUT</span>
+                            <span class="endpoint-path">/api/auth/{id}</span>
+                            <span class="badge badge-auth-yes">Auth Required</span>
+                        </div>
+
+                        <h3>Replace Authentication Token</h3>
+                        <p><strong>Use Case:</strong> Replace the fullname and token of an existing auth record. The route id is authoritative. The token must be non-empty and not already used by another record.</p>
+
+                        <h4>URL Parameters</h4>
+                        <div class="field-list">
+                            <p><strong>id</strong> <span class="badge badge-required">required</span> - Auth token ID</p>
+                        </div>
+
+                        <h4>Request Body</h4>
+                        <pre><code>{
+  "fullname": "John Developer",
+  "token": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+}</code></pre>
+
+                        <h4>Response (200 OK)</h4>
+                        <pre><code>{
+  "id": 1,
+  "fullname": "John Developer",
+  "token": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+}</code></pre>
+
+                        <h4>Example (cURL)</h4>
+                        <pre><code>curl -X PUT http://localhost:5201/api/auth/1 \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "fullname": "John Developer",
+    "token": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+  }'</code></pre>
+
+                        <h4>Example (.http file)</h4>
+                        <pre><code>PUT http://localhost:5201/api/auth/1
+Authorization: Bearer YOUR_TOKEN_HERE
+Content-Type: application/json
+
+{
+  "fullname": "John Developer",
+  "token": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+}</code></pre>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method badge badge-patch">PATCH</span>
+                            <span class="endpoint-path">/api/auth/{id}</span>
+                            <span class="badge badge-auth-yes">Auth Required</span>
+                        </div>
+
+                        <h3>Partially Update Authentication Token</h3>
+                        <p><strong>Use Case:</strong> Change only the fullname and/or token of an existing auth record. Only the fields you send are changed.</p>
+
+                        <h4>URL Parameters</h4>
+                        <div class="field-list">
+                            <p><strong>id</strong> <span class="badge badge-required">required</span> - Auth token ID</p>
+                        </div>
+
+                        <h4>Example (cURL)</h4>
+                        <pre><code>curl -X PATCH http://localhost:5201/api/auth/1 \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE" \
+  -H "Content-Type: application/json" \
+  -d '{"fullname":"John Updated"}'</code></pre>
+
+                        <h4>Example (.http file)</h4>
+                        <pre><code>PATCH http://localhost:5201/api/auth/1
+Authorization: Bearer YOUR_TOKEN_HERE
+Content-Type: application/json
+
+{
+  "fullname": "John Updated"
+}</code></pre>
+
+                        <h4>Response (200 OK)</h4>
+                        <pre><code>{
+  "id": 1,
+  "fullname": "John Updated",
+  "token": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+}</code></pre>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method badge badge-delete">DELETE</span>
+                            <span class="endpoint-path">/api/auth/{id}</span>
+                            <span class="badge badge-auth-yes">Auth Required</span>
+                        </div>
+
+                        <h3>Delete Authentication Token</h3>
+                        <p><strong>Use Case:</strong> Permanently remove an auth record. Unknown ids return <code>404</code>.</p>
+
+                        <h4>URL Parameters</h4>
+                        <div class="field-list">
+                            <p><strong>id</strong> <span class="badge badge-required">required</span> - Auth token ID</p>
+                        </div>
+
+                        <h4>Example (cURL)</h4>
+                        <pre><code>curl -X DELETE http://localhost:5201/api/auth/1 \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE"</code></pre>
+
+                        <h4>Example (.http file)</h4>
+                        <pre><code>DELETE http://localhost:5201/api/auth/1
+Authorization: Bearer YOUR_TOKEN_HERE</code></pre>
+
+                        <h4>Response (204 No Content)</h4>
+                        <p>Empty body. The record is gone.</p>
+                    </div>
+                </section>
+
+                <!-- Events Endpoints -->
+                <section id="events-endpoints">
+                    <h2>Events Endpoints</h2>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method badge badge-get">GET</span>
+                            <span class="endpoint-path">/api/events</span>
+                            <span class="badge badge-auth-yes">Auth Required</span>
+                        </div>
+
+                        <h3>Get All Events</h3>
+                        <p><strong>Use Case:</strong> Display a list of events, search for specific events, or filter by category/location.</p>
+
+                        <div class="alert alert-info">
+                            <strong>Important:</strong> This endpoint ALWAYS returns events with their related <code>organizer</code> and <code>comments</code> data automatically loaded.
+                        </div>
+
+                        <h4>Query Parameters (all optional)</h4>
+                        <div class="field-list">
+                            <p><strong>category</strong> - Filter by exact category match (case-insensitive)</p>
+                            <p><strong>title</strong> - Search in event titles (partial match, case-insensitive)</p>
+                            <p><strong>description</strong> - Search in descriptions (partial match, case-insensitive)</p>
+                            <p><strong>location</strong> - Search in locations (partial match, case-insensitive)</p>
+                            <p><strong>search</strong> - Search across title, description, and location (partial match)</p>
+                        </div>
+
+                        <h4>Example (cURL)</h4>
+                        <pre><code>curl http://localhost:5201/api/events \
+  -H "Authorization: Bearer your-token-here"</code></pre>
+
+                        <h4>Example with filter (cURL)</h4>
+                        <pre><code>curl "http://localhost:5201/api/events?category=Tech" \
+  -H "Authorization: Bearer your-token-here"</code></pre>
+
+                        <h4>Example (.http file)</h4>
+                        <pre><code>GET http://localhost:5201/api/events
+Authorization: Bearer your-token-here
+
+###
+
+GET http://localhost:5201/api/events?category=Tech
+Authorization: Bearer your-token-here</code></pre>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method badge badge-get">GET</span>
+                            <span class="endpoint-path">/api/events/{id}</span>
+                            <span class="badge badge-auth-yes">Auth Required</span>
+                        </div>
+
+                        <h3>Get Single Event</h3>
+                        <p><strong>Use Case:</strong> Display detailed information about a specific event.</p>
+
+                        <h4>URL Parameters</h4>
+                        <div class="field-list">
+                            <p><strong>id</strong> <span class="badge badge-required">required</span> - Event ID</p>
+                        </div>
+
+                        <h4>Response (200 OK)</h4>
+                        <pre><code>{
+  "id": 1,
+  "category": "Tech",
+  "title": "Web Development Workshop",
+  "description": "Learn modern web development",
+  "location": "London",
+  "eventDate": "2025-12-15T14:00:00",
+  "organizerId": 5,
+  "imageUrls": "https://picsum.photos/400/300",
+  "organizer": {
+    "id": 5,
+    "fullname": "John Smith",
+    "email": "john@example.com",
+    "imageUrl": "https://example.com/avatar.jpg"
+  },
+  "comments": [
+    {
+      "id": 1,
+      "eventId": 1,
+      "author": "Jane Doe",
+      "content": "Looking forward to this!"
+    }
+  ],
+  "images": ["https://picsum.photos/400/300"]
+}</code></pre>
+
+                        <h4>Example (cURL)</h4>
+                        <pre><code>curl http://localhost:5201/api/events/1 \
+  -H "Authorization: Bearer your-token-here"</code></pre>
+
+                        <h4>Example (.http file)</h4>
+                        <pre><code>GET http://localhost:5201/api/events/1
+Authorization: Bearer your-token-here</code></pre>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method badge badge-post">POST</span>
+                            <span class="endpoint-path">/api/events</span>
+                            <span class="badge badge-auth-yes">Auth Required</span>
+                        </div>
+
+                        <h3>Create Event</h3>
+                        <p><strong>Use Case:</strong> Allow organizers to create new events.</p>
+
+                        <div class="alert alert-warning">
+                            <strong>Required Fields:</strong> category, title, description, location<br>
+                            <strong>Optional Fields:</strong> eventDate, organizerId, imageUrls
+                        </div>
+
+                        <h4>Request Body</h4>
+                        <pre><code>{
+  "category": "Tech",          // Required
+  "title": "Web Development Workshop",  // Required
+  "description": "Learn modern web development techniques",  // Required
+  "location": "London",         // Required
+  "eventDate": "2025-12-15T14:00:00",   // Optional
+  "organizerId": 5,             // Optional
+  "imageUrls": "https://img1.jpg,https://img2.jpg"  // Optional (comma-separated)
+}</code></pre>
+
+                        <div class="alert alert-info">
+                            <strong>Note on imageUrls:</strong> You can provide multiple image URLs as a comma-separated string. The API will return them as an array in the <code>images</code> field.
+                        </div>
+
+                        <h4>Example (cURL)</h4>
+                        <pre><code>curl -X POST http://localhost:5201/api/events \
+  -H "Authorization: Bearer your-token-here" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "category": "Tech",
+    "title": "Web Development Workshop",
+    "description": "Learn modern web development techniques",
+    "location": "London",
+    "eventDate": "2025-12-15T14:00:00",
+    "organizerId": 5,
+    "imageUrls": "https://example.com/image1.jpg"
+  }'</code></pre>
+
+                        <h4>Example (.http file)</h4>
+                        <pre><code>POST http://localhost:5201/api/events
+Authorization: Bearer your-token-here
+Content-Type: application/json
+
+{
+  "category": "Tech",
+  "title": "Web Development Workshop",
+  "description": "Learn modern web development techniques",
+  "location": "London",
+  "eventDate": "2025-12-15T14:00:00",
+  "organizerId": 5,
+  "imageUrls": "https://example.com/image1.jpg"
+}</code></pre>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method badge badge-put">PUT</span>
+                            <span class="endpoint-path">/api/events/{id}</span>
+                            <span class="badge badge-auth-yes">Auth Required</span>
+                        </div>
+
+                        <h3>Replace Event</h3>
+                        <p><strong>Use Case:</strong> Replace the whole event record using the same fields as Create Event. All required fields (category, title, description, location) must be present. The route id is authoritative. Link with <code>organizerId</code> or a nested <code>organizer</code> object; the organizer must exist.</p>
+
+                        <h4>URL Parameters</h4>
+                        <div class="field-list">
+                            <p><strong>id</strong> <span class="badge badge-required">required</span> - Event ID</p>
+                        </div>
+
+                        <h4>Example (cURL)</h4>
+                        <pre><code>curl -X PUT http://localhost:5201/api/events/5 \
+  -H "Authorization: Bearer [REDACTED]" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "category": "Tech",
+    "title": "Advanced Web Workshop",
+    "description": "Deep dive into modern web development",
+    "location": "Manchester",
+    "eventDate": "2025-12-20T14:00:00",
+    "organizerId": 5,
+    "imageUrls": "https://example.com/updated.jpg"
+  }'</code></pre>
+
+                        <h4>Example (.http file)</h4>
+                        <pre><code>PUT http://localhost:5201/api/events/5
+Authorization: Bearer [REDACTED]
+Content-Type: application/json
+
+{
+  "category": "Tech",
+  "title": "Advanced Web Workshop",
+  "description": "Deep dive into modern web development",
+  "location": "Manchester",
+  "eventDate": "2025-12-20T14:00:00",
+  "organizerId": 5,
+  "imageUrls": "https://example.com/updated.jpg"
+}</code></pre>
+
+                        <h4>Response (200 OK)</h4>
+                        <pre><code>{
+  "id": 5,
+  "category": "Tech",
+  "title": "Advanced Web Workshop",
+  "description": "Deep dive into modern web development",
+  "location": "Manchester",
+  "eventDate": "2025-12-20T14:00:00",
+  "organizerId": 5,
+  "imageUrls": "https://example.com/updated.jpg",
+  "organizer": {
+    "id": 5,
+    "fullname": "John Smith",
+    "email": "john@example.com",
+    "imageUrl": "https://example.com/avatar.jpg"
+  },
+  "comments": [],
+  "images": ["https://example.com/updated.jpg"]
+}</code></pre>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method badge badge-patch">PATCH</span>
+                            <span class="endpoint-path">/api/events/{id}</span>
+                            <span class="badge badge-auth-yes">Auth Required</span>
+                        </div>
+
+                        <h3>Partially Update Event</h3>
+                        <p><strong>Use Case:</strong> Change only the fields you send; every other field keeps its value. Send <code>null</code> to clear an optional field such as <code>eventDate</code> or <code>imageUrls</code>.</p>
+
+                        <h4>URL Parameters</h4>
+                        <div class="field-list">
+                            <p><strong>id</strong> <span class="badge badge-required">required</span> - Event ID</p>
+                        </div>
+
+                        <h4>Example (cURL)</h4>
+                        <pre><code>curl -X PATCH http://localhost:5201/api/events/5 \
+  -H "Authorization: Bearer [REDACTED]" \
+  -H "Content-Type: application/json" \
+  -d '{"title":"Updated title","location":"Leeds"}'</code></pre>
+
+                        <h4>Example (.http file)</h4>
+                        <pre><code>PATCH http://localhost:5201/api/events/5
+Authorization: Bearer [REDACTED]
+Content-Type: application/json
+
+{
+  "title": "Updated title",
+  "location": "Leeds"
+}</code></pre>
+
+                        <h4>Response (200 OK)</h4>
+                        <pre><code>{
+  "id": 5,
+  "category": "Tech",
+  "title": "Updated title",
+  "description": "Learn modern web development techniques",
+  "location": "Leeds",
+  "eventDate": "2025-12-15T14:00:00",
+  "organizerId": 5,
+  "imageUrls": "https://example.com/image1.jpg",
+  "organizer": {
+    "id": 5,
+    "fullname": "John Smith",
+    "email": "john@example.com",
+    "imageUrl": "https://example.com/avatar.jpg"
+  },
+  "comments": [],
+  "images": ["https://example.com/image1.jpg"]
+}</code></pre>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method badge badge-delete">DELETE</span>
+                            <span class="endpoint-path">/api/events/{id}</span>
+                            <span class="badge badge-auth-yes">Auth Required</span>
+                        </div>
+
+                        <h3>Delete Event</h3>
+                        <p><strong>Use Case:</strong> Permanently remove an event. Deleting an event also deletes its comments. Unknown ids return <code>404</code>.</p>
+
+                        <h4>URL Parameters</h4>
+                        <div class="field-list">
+                            <p><strong>id</strong> <span class="badge badge-required">required</span> - Event ID</p>
+                        </div>
+
+                        <h4>Example (cURL)</h4>
+                        <pre><code>curl -X DELETE http://localhost:5201/api/events/5 \
+  -H "Authorization: Bearer [REDACTED]"</code></pre>
+
+                        <h4>Example (.http file)</h4>
+                        <pre><code>DELETE http://localhost:5201/api/events/5
+Authorization: Bearer [REDACTED]</code></pre>
+
+                        <h4>Response (204 No Content)</h4>
+                        <p>Empty body. The event and its comments are gone.</p>
+                    </div>
+                </section>
+
+                <!-- Organizers Endpoints -->
+                <section id="organizers-endpoints">
+                    <h2>Organizers Endpoints</h2>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method badge badge-get">GET</span>
+                            <span class="endpoint-path">/api/organizers</span>
+                            <span class="badge badge-auth-yes">Auth Required</span>
+                        </div>
+
+                        <h3>Get All Organizers</h3>
+                        <p><strong>Use Case:</strong> Display a list of event organizers, optionally with their events.</p>
+
+                        <h4>Query Parameters</h4>
+                        <div class="field-list">
+                            <p><strong>withRelated</strong> <span class="badge badge-optional">optional</span> - Add this as a URL query parameter to include related events</p>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <strong>How to use withRelated:</strong><br>
+                            Add <code>?withRelated=true</code> to the URL to load related data.<br>
+                            Any non-empty value works: <code>?withRelated=true</code>, <code>?withRelated=yes</code>, <code>?withRelated=1</code><br><br>
+                            <strong>Without:</strong> <code>GET /api/organizers</code> → events will be <code>null</code><br>
+                            <strong>With:</strong> <code>GET /api/organizers?withRelated=true</code> → events array will be populated
+                        </div>
+
+                        <h4>Example - Without Relationships (cURL)</h4>
+                        <pre><code>curl http://localhost:5201/api/organizers \
+  -H "Authorization: Bearer your-token-here"</code></pre>
+
+                        <h4>Example - With Relationships (cURL)</h4>
+                        <pre><code>curl "http://localhost:5201/api/organizers?withRelated=true" \
+  -H "Authorization: Bearer your-token-here"</code></pre>
+
+                        <h4>Example (.http file)</h4>
+                        <pre><code>GET http://localhost:5201/api/organizers
+Authorization: Bearer your-token-here
+
+###
+
+GET http://localhost:5201/api/organizers?withRelated=true
+Authorization: Bearer your-token-here</code></pre>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method badge badge-get">GET</span>
+                            <span class="endpoint-path">/api/organizers/{id}</span>
+                            <span class="badge badge-auth-yes">Auth Required</span>
+                        </div>
+
+                        <h3>Get Single Organizer</h3>
+                        <p><strong>Use Case:</strong> Display an organizer's profile, optionally with their events.</p>
+
+                        <h4>URL Parameters</h4>
+                        <div class="field-list">
+                            <p><strong>id</strong> <span class="badge badge-required">required</span> - Organizer ID</p>
+                        </div>
+
+                        <h4>Query Parameters</h4>
+                        <div class="field-list">
+                            <p><strong>withRelated</strong> <span class="badge badge-optional">optional</span> - Pass any non-empty value to include related events</p>
+                        </div>
+
+                        <h4>Example (cURL)</h4>
+                        <pre><code>curl "http://localhost:5201/api/organizers/1?withRelated=true" \
+  -H "Authorization: Bearer your-token-here"</code></pre>
+
+                        <h4>Example (.http file)</h4>
+                        <pre><code>GET http://localhost:5201/api/organizers/1?withRelated=true
+Authorization: Bearer your-token-here</code></pre>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method badge badge-post">POST</span>
+                            <span class="endpoint-path">/api/organizers</span>
+                            <span class="badge badge-auth-yes">Auth Required</span>
+                        </div>
+
+                        <h3>Create Organizer</h3>
+                        <p><strong>Use Case:</strong> Register a new event organizer.</p>
+
+                        <h4>Request Body</h4>
+                        <pre><code>{
+  "fullname": "Jane Smith",
+  "email": "jane@example.com",
+  "imageUrl": "https://example.com/avatar.jpg"
+}</code></pre>
+
+                        <h4>Example (cURL)</h4>
+                        <pre><code>curl -X POST http://localhost:5201/api/organizers \
+  -H "Authorization: Bearer your-token-here" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "fullname": "Jane Smith",
+    "email": "jane@example.com",
+    "imageUrl": "https://example.com/avatar.jpg"
+  }'</code></pre>
+
+                        <h4>Example (.http file)</h4>
+                        <pre><code>POST http://localhost:5201/api/organizers
+Authorization: Bearer your-token-here
+Content-Type: application/json
+
+{
+  "fullname": "Jane Smith",
+  "email": "jane@example.com",
+  "imageUrl": "https://example.com/avatar.jpg"
+}</code></pre>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method badge badge-put">PUT</span>
+                            <span class="endpoint-path">/api/organizers/{id}</span>
+                            <span class="badge badge-auth-yes">Auth Required</span>
+                        </div>
+
+                        <h3>Replace Organizer</h3>
+                        <p><strong>Use Case:</strong> Replace the whole organizer record using the same fields as Create Organizer. The route id is authoritative.</p>
+
+                        <h4>URL Parameters</h4>
+                        <div class="field-list">
+                            <p><strong>id</strong> <span class="badge badge-required">required</span> - Organizer ID</p>
+                        </div>
+
+                        <h4>Example (cURL)</h4>
+                        <pre><code>curl -X PUT http://localhost:5201/api/organizers/5 \
+  -H "Authorization: Bearer [REDACTED]" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "fullname": "John Smith",
+    "email": "john.smith@example.com",
+    "imageUrl": "https://example.com/john.jpg"
+  }'</code></pre>
+
+                        <h4>Example (.http file)</h4>
+                        <pre><code>PUT http://localhost:5201/api/organizers/5
+Authorization: Bearer [REDACTED]
+Content-Type: application/json
+
+{
+  "fullname": "John Smith",
+  "email": "john.smith@example.com",
+  "imageUrl": "https://example.com/john.jpg"
+}</code></pre>
+
+                        <h4>Response (200 OK)</h4>
+                        <pre><code>{
+  "id": 5,
+  "fullname": "John Smith",
+  "email": "john.smith@example.com",
+  "imageUrl": "https://example.com/john.jpg"
+}</code></pre>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method badge badge-patch">PATCH</span>
+                            <span class="endpoint-path">/api/organizers/{id}</span>
+                            <span class="badge badge-auth-yes">Auth Required</span>
+                        </div>
+
+                        <h3>Partially Update Organizer</h3>
+                        <p><strong>Use Case:</strong> Change only the fields you send; every other field keeps its value. Send <code>null</code> to clear the optional <code>imageUrl</code>.</p>
+
+                        <h4>URL Parameters</h4>
+                        <div class="field-list">
+                            <p><strong>id</strong> <span class="badge badge-required">required</span> - Organizer ID</p>
+                        </div>
+
+                        <h4>Example (cURL)</h4>
+                        <pre><code>curl -X PATCH http://localhost:5201/api/organizers/5 \
+  -H "Authorization: Bearer [REDACTED]" \
+  -H "Content-Type: application/json" \
+  -d '{"email":"new.address@example.com"}'</code></pre>
+
+                        <h4>Example (.http file)</h4>
+                        <pre><code>PATCH http://localhost:5201/api/organizers/5
+Authorization: Bearer [REDACTED]
+Content-Type: application/json
+
+{
+  "email": "new.address@example.com"
+}</code></pre>
+
+                        <h4>Response (200 OK)</h4>
+                        <pre><code>{
+  "id": 5,
+  "fullname": "Jane Smith",
+  "email": "new.address@example.com",
+  "imageUrl": "https://example.com/avatar.jpg"
+}</code></pre>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method badge badge-delete">DELETE</span>
+                            <span class="endpoint-path">/api/organizers/{id}</span>
+                            <span class="badge badge-auth-yes">Auth Required</span>
+                        </div>
+
+                        <h3>Delete Organizer</h3>
+                        <p><strong>Use Case:</strong> Permanently remove an organizer. Its events are kept and unlinked. Unknown ids return <code>404</code>.</p>
+
+                        <h4>URL Parameters</h4>
+                        <div class="field-list">
+                            <p><strong>id</strong> <span class="badge badge-required">required</span> - Organizer ID</p>
+                        </div>
+
+                        <h4>Example (cURL)</h4>
+                        <pre><code>curl -X DELETE http://localhost:5201/api/organizers/5 \
+  -H "Authorization: Bearer [REDACTED]"</code></pre>
+
+                        <h4>Example (.http file)</h4>
+                        <pre><code>DELETE http://localhost:5201/api/organizers/5
+Authorization: Bearer [REDACTED]</code></pre>
+
+                        <h4>Response (204 No Content)</h4>
+                        <p>Empty body. The organizer is gone; its events remain with no organizer.</p>
+                    </div>
+                </section>
+
+                <!-- Comments Endpoints -->
+                <section id="comments-endpoints">
+                    <h2>Comments Endpoints</h2>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method badge badge-get">GET</span>
+                            <span class="endpoint-path">/api/comments</span>
+                            <span class="badge badge-auth-yes">Auth Required</span>
+                        </div>
+
+                        <h3>Get All Comments</h3>
+                        <p><strong>Use Case:</strong> Display all comments, optionally with related event data.</p>
+
+                        <h4>Query Parameters</h4>
+                        <div class="field-list">
+                            <p><strong>withRelated</strong> <span class="badge badge-optional">optional</span> - Add this as a URL query parameter to include related event data</p>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <strong>How to use withRelated:</strong><br>
+                            Add <code>?withRelated=true</code> to the URL to load the related event.<br>
+                            Any non-empty value works: <code>?withRelated=true</code>, <code>?withRelated=yes</code>, <code>?withRelated=1</code><br><br>
+                            <strong>Without:</strong> <code>GET /api/comments</code> → event will be <code>null</code><br>
+                            <strong>With:</strong> <code>GET /api/comments?withRelated=true</code> → event object will be populated
+                        </div>
+
+                        <h4>Example (cURL)</h4>
+                        <pre><code>curl "http://localhost:5201/api/comments?withRelated=true" \
+  -H "Authorization: Bearer your-token-here"</code></pre>
+
+                        <h4>Example (.http file)</h4>
+                        <pre><code>GET http://localhost:5201/api/comments?withRelated=true
+Authorization: Bearer your-token-here</code></pre>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method badge badge-get">GET</span>
+                            <span class="endpoint-path">/api/comments/event/{id}</span>
+                            <span class="badge badge-auth-yes">Auth Required</span>
+                        </div>
+
+                        <h3>Get Comments by Event</h3>
+                        <p><strong>Use Case:</strong> Display all comments for a specific event.</p>
+
+                        <h4>URL Parameters</h4>
+                        <div class="field-list">
+                            <p><strong>id</strong> <span class="badge badge-required">required</span> - Event ID</p>
+                        </div>
+
+                        <h4>Example (cURL)</h4>
+                        <pre><code>curl http://localhost:5201/api/comments/event/5 \
+  -H "Authorization: Bearer your-token-here"</code></pre>
+
+                        <h4>Example (.http file)</h4>
+                        <pre><code>GET http://localhost:5201/api/comments/event/5
+Authorization: Bearer your-token-here</code></pre>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method badge badge-post">POST</span>
+                            <span class="endpoint-path">/api/comments</span>
+                            <span class="badge badge-auth-yes">Auth Required</span>
+                        </div>
+
+                        <h3>Create Comment</h3>
+                        <p><strong>Use Case:</strong> Add a comment to an event.</p>
+
+                        <h4>Request Body</h4>
+                        <pre><code>{
+  "eventId": 5,
+  "author": "Jane Doe",
+  "content": "This event looks amazing!"
+}</code></pre>
+
+                        <h4>Example (cURL)</h4>
+                        <pre><code>curl -X POST http://localhost:5201/api/comments \
+  -H "Authorization: Bearer your-token-here" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "eventId": 5,
+    "author": "Jane Doe",
+    "content": "This event looks amazing!"
+  }'</code></pre>
+
+                        <h4>Example (.http file)</h4>
+                        <pre><code>POST http://localhost:5201/api/comments
+Authorization: Bearer your-token-here
+Content-Type: application/json
+
+{
+  "eventId": 5,
+  "author": "Jane Doe",
+  "content": "This event looks amazing!"
+}</code></pre>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method badge badge-post">POST</span>
+                            <span class="endpoint-path">/api/comments/{eventId}</span>
+                            <span class="badge badge-auth-yes">Auth Required</span>
+                        </div>
+
+                        <h3>Create Comment by Event ID</h3>
+                        <p><strong>Use Case:</strong> Simplified comment creation when event ID is in URL.</p>
+
+                        <h4>URL Parameters</h4>
+                        <div class="field-list">
+                            <p><strong>eventId</strong> <span class="badge badge-required">required</span> - Event ID</p>
+                        </div>
+
+                        <h4>Request Body</h4>
+                        <pre><code>{
+  "author": "Jane Doe",
+  "content": "This event looks amazing!"
+}</code></pre>
+                        <p><em>Note: eventId is taken from the URL, not the body</em></p>
+
+                        <h4>Example (cURL)</h4>
+                        <pre><code>curl -X POST http://localhost:5201/api/comments/5 \
+  -H "Authorization: Bearer your-token-here" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "author": "Jane Doe",
+    "content": "This event looks amazing!"
+  }'</code></pre>
+
+                        <h4>Example (.http file)</h4>
+                        <pre><code>POST http://localhost:5201/api/comments/5
+Authorization: Bearer your-token-here
+Content-Type: application/json
+
+{
+  "author": "Jane Doe",
+  "content": "This event looks amazing!"
+}</code></pre>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method badge badge-put">PUT</span>
+                            <span class="endpoint-path">/api/comments/{id}</span>
+                            <span class="badge badge-auth-yes">Auth Required</span>
+                        </div>
+
+                        <h3>Replace Comment</h3>
+                        <p><strong>Use Case:</strong> Replace the whole comment record using the same fields as Create Comment. Change <code>eventId</code> (or the nested <code>event</code>) to move the comment; the event must exist. The route id is authoritative.</p>
+
+                        <h4>URL Parameters</h4>
+                        <div class="field-list">
+                            <p><strong>id</strong> <span class="badge badge-required">required</span> - Comment ID</p>
+                        </div>
+
+                        <h4>Example (cURL)</h4>
+                        <pre><code>curl -X PUT http://localhost:5201/api/comments/3 \
+  -H "Authorization: Bearer [REDACTED]" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "eventId": 5,
+    "author": "Jane Doe",
+    "content": "Updated comment text"
+  }'</code></pre>
+
+                        <h4>Example (.http file)</h4>
+                        <pre><code>PUT http://localhost:5201/api/comments/3
+Authorization: Bearer [REDACTED]
+Content-Type: application/json
+
+{
+  "eventId": 5,
+  "author": "Jane Doe",
+  "content": "Updated comment text"
+}</code></pre>
+
+                        <h4>Response (200 OK)</h4>
+                        <pre><code>{
+  "id": 3,
+  "eventId": 5,
+  "author": "Jane Doe",
+  "content": "Updated comment text"
+}</code></pre>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method badge badge-patch">PATCH</span>
+                            <span class="endpoint-path">/api/comments/{id}</span>
+                            <span class="badge badge-auth-yes">Auth Required</span>
+                        </div>
+
+                        <h3>Partially Update Comment</h3>
+                        <p><strong>Use Case:</strong> Change only the fields you send; every other field keeps its value.</p>
+
+                        <h4>URL Parameters</h4>
+                        <div class="field-list">
+                            <p><strong>id</strong> <span class="badge badge-required">required</span> - Comment ID</p>
+                        </div>
+
+                        <h4>Example (cURL)</h4>
+                        <pre><code>curl -X PATCH http://localhost:5201/api/comments/3 \
+  -H "Authorization: Bearer [REDACTED]" \
+  -H "Content-Type: application/json" \
+  -d '{"content":"Edited: still looking forward to this!"}'</code></pre>
+
+                        <h4>Example (.http file)</h4>
+                        <pre><code>PATCH http://localhost:5201/api/comments/3
+Authorization: Bearer [REDACTED]
+Content-Type: application/json
+
+{
+  "content": "Edited: still looking forward to this!"
+}</code></pre>
+
+                        <h4>Response (200 OK)</h4>
+                        <pre><code>{
+  "id": 3,
+  "eventId": 5,
+  "author": "Jane Doe",
+  "content": "Edited: still looking forward to this!"
+}</code></pre>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method badge badge-delete">DELETE</span>
+                            <span class="endpoint-path">/api/comments/{id}</span>
+                            <span class="badge badge-auth-yes">Auth Required</span>
+                        </div>
+
+                        <h3>Delete Comment</h3>
+                        <p><strong>Use Case:</strong> Permanently remove a comment. Unknown ids return <code>404</code>.</p>
+
+                        <h4>URL Parameters</h4>
+                        <div class="field-list">
+                            <p><strong>id</strong> <span class="badge badge-required">required</span> - Comment ID</p>
+                        </div>
+
+                        <h4>Example (cURL)</h4>
+                        <pre><code>curl -X DELETE http://localhost:5201/api/comments/3 \
+  -H "Authorization: Bearer [REDACTED]"</code></pre>
+
+                        <h4>Example (.http file)</h4>
+                        <pre><code>DELETE http://localhost:5201/api/comments/3
+Authorization: Bearer [REDACTED]</code></pre>
+
+                        <h4>Response (204 No Content)</h4>
+                        <p>Empty body. The comment is gone.</p>
+                    </div>
+                </section>
+
+                <!-- Messages Endpoints -->
+                <section id="messages-endpoints">
+                    <h2>Messages Endpoints</h2>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method badge badge-get">GET</span>
+                            <span class="endpoint-path">/api/messages</span>
+                            <span class="badge badge-auth-no">No Auth Required</span>
+                        </div>
+
+                        <h3>Get All Messages</h3>
+                        <p><strong>Use Case:</strong> Display contact/inquiry messages.</p>
+
+                        <h4>Example (cURL)</h4>
+                        <pre><code>curl http://localhost:5201/api/messages</code></pre>
+
+                        <h4>Example (.http file)</h4>
+                        <pre><code>GET http://localhost:5201/api/messages</code></pre>
+
+                        <h4>Example (JavaScript Fetch)</h4>
+                        <pre><code>const response = await fetch('http://localhost:5201/api/messages');
+const messages = await response.json();
+console.log('All messages:', messages);</code></pre>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method badge badge-get">GET</span>
+                            <span class="endpoint-path">/api/messages/{id}</span>
+                            <span class="badge badge-auth-no">No Auth Required</span>
+                        </div>
+
+                        <h3>Get Single Message</h3>
+                        <p><strong>Use Case:</strong> Display a specific message.</p>
+
+                        <h4>Example (cURL)</h4>
+                        <pre><code>curl http://localhost:5201/api/messages/1</code></pre>
+
+                        <h4>Example (.http file)</h4>
+                        <pre><code>GET http://localhost:5201/api/messages/1</code></pre>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method badge badge-post">POST</span>
+                            <span class="endpoint-path">/api/messages</span>
+                            <span class="badge badge-auth-no">No Auth Required</span>
+                        </div>
+
+                        <h3>Create Message</h3>
+                        <p><strong>Use Case:</strong> Allow users to submit contact/inquiry forms.</p>
+
+                        <h4>Request Body</h4>
+                        <pre><code>{
+  "fullname": "Alice Johnson",
+  "email": "alice@example.com",
+  "phone": "+441234567890",
+  "content": "I have a question about your events."
+}</code></pre>
+
+                        <h4>Example (cURL)</h4>
+                        <pre><code>curl -X POST http://localhost:5201/api/messages \
+  -H "Content-Type: application/json" \
+  -d '{
+    "fullname": "Alice Johnson",
+    "email": "alice@example.com",
+    "phone": "+441234567890",
+    "content": "I have a question about your events."
+  }'</code></pre>
+
+                        <h4>Example (.http file)</h4>
+                        <pre><code>POST http://localhost:5201/api/messages
+Content-Type: application/json
+
+{
+  "fullname": "Alice Johnson",
+  "email": "alice@example.com",
+  "phone": "+441234567890",
+  "content": "I have a question about your events."
+}</code></pre>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method badge badge-put">PUT</span>
+                            <span class="endpoint-path">/api/messages/{id}</span>
+                            <span class="badge badge-auth-yes">Auth Required</span>
+                        </div>
+
+                        <h3>Replace Message</h3>
+                        <p><strong>Use Case:</strong> Replace the whole message record. Reading and creating messages stays public, but modifying them requires a valid Bearer token. The route id is authoritative.</p>
+
+                        <h4>URL Parameters</h4>
+                        <div class="field-list">
+                            <p><strong>id</strong> <span class="badge badge-required">required</span> - Message ID</p>
+                        </div>
+
+                        <h4>Example (cURL)</h4>
+                        <pre><code>curl -X PUT http://localhost:5201/api/messages/2 \
+  -H "Authorization: Bearer [REDACTED]" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "fullname": "Alice Johnson",
+    "email": "alice.j@example.com",
+    "phone": "+441234567890",
+    "content": "Updated: my question was answered, thank you."
+  }'</code></pre>
+
+                        <h4>Example (.http file)</h4>
+                        <pre><code>PUT http://localhost:5201/api/messages/2
+Authorization: Bearer [REDACTED]
+Content-Type: application/json
+
+{
+  "fullname": "Alice Johnson",
+  "email": "alice.j@example.com",
+  "phone": "+441234567890",
+  "content": "Updated: my question was answered, thank you."
+}</code></pre>
+
+                        <h4>Response (200 OK)</h4>
+                        <pre><code>{
+  "id": 2,
+  "fullname": "Alice Johnson",
+  "email": "alice.j@example.com",
+  "phone": "+441234567890",
+  "content": "Updated: my question was answered, thank you."
+}</code></pre>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method badge badge-patch">PATCH</span>
+                            <span class="endpoint-path">/api/messages/{id}</span>
+                            <span class="badge badge-auth-yes">Auth Required</span>
+                        </div>
+
+                        <h3>Partially Update Message</h3>
+                        <p><strong>Use Case:</strong> Change only the fields you send; every other field keeps its value. Requires a valid Bearer token.</p>
+
+                        <h4>URL Parameters</h4>
+                        <div class="field-list">
+                            <p><strong>id</strong> <span class="badge badge-required">required</span> - Message ID</p>
+                        </div>
+
+                        <h4>Example (cURL)</h4>
+                        <pre><code>curl -X PATCH http://localhost:5201/api/messages/2 \
+  -H "Authorization: Bearer [REDACTED]" \
+  -H "Content-Type: application/json" \
+  -d '{"content":"Edited: question resolved."}'</code></pre>
+
+                        <h4>Example (.http file)</h4>
+                        <pre><code>PATCH http://localhost:5201/api/messages/2
+Authorization: Bearer [REDACTED]
+Content-Type: application/json
+
+{
+  "content": "Edited: question resolved."
+}</code></pre>
+
+                        <h4>Response (200 OK)</h4>
+                        <pre><code>{
+  "id": 2,
+  "fullname": "Alice Johnson",
+  "email": "alice@example.com",
+  "phone": "+441234567890",
+  "content": "Edited: question resolved."
+}</code></pre>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method badge badge-delete">DELETE</span>
+                            <span class="endpoint-path">/api/messages/{id}</span>
+                            <span class="badge badge-auth-yes">Auth Required</span>
+                        </div>
+
+                        <h3>Delete Message</h3>
+                        <p><strong>Use Case:</strong> Permanently remove a message. Requires a valid Bearer token. Unknown ids return <code>404</code>.</p>
+
+                        <h4>URL Parameters</h4>
+                        <div class="field-list">
+                            <p><strong>id</strong> <span class="badge badge-required">required</span> - Message ID</p>
+                        </div>
+
+                        <h4>Example (cURL)</h4>
+                        <pre><code>curl -X DELETE http://localhost:5201/api/messages/2 \
+  -H "Authorization: Bearer [REDACTED]"</code></pre>
+
+                        <h4>Example (.http file)</h4>
+                        <pre><code>DELETE http://localhost:5201/api/messages/2
+Authorization: Bearer [REDACTED]</code></pre>
+
+                        <h4>Response (204 No Content)</h4>
+                        <p>Empty body. The message is gone.</p>
+                    </div>
+                </section>
+
+
+                <!-- Update and Delete Endpoints -->
+                <section id="update-delete-endpoints">
+                    <h2>Update and Delete Endpoints</h2>
+                    <p>Every resource supports <strong>PUT</strong> (replace the whole record using the same fields as its Create endpoint),
+                       <strong>PATCH</strong> (change only the fields you send; send <code>null</code> to clear an optional field), and
+                       <strong>DELETE</strong> (returns <code>204 No Content</code>). The route id is authoritative.
+                       All update/delete actions require a valid Bearer token; there are no roles or ownership checks.
+                       Unknown ids return <code>404</code> and invalid data or links return <code>400</code>.</p>
+                    <table>
+                        <thead><tr><th>Endpoint</th><th>Methods</th><th>Notes</th></tr></thead>
+                        <tbody>
+                            <tr><td><code>/api/auth/{id}</code></td><td>PUT, PATCH, DELETE</td><td>Token must be non-empty and not used by another record.</td></tr>
+                            <tr><td><code>/api/events/{id}</code></td><td>PUT, PATCH, DELETE</td><td>Deleting an event also deletes its comments. Link with <code>organizerId</code> or a nested <code>organizer</code>.</td></tr>
+                            <tr><td><code>/api/organizers/{id}</code></td><td>PUT, PATCH, DELETE</td><td>Deleting an organizer keeps its events and unlinks them.</td></tr>
+                            <tr><td><code>/api/comments/{id}</code></td><td>PUT, PATCH, DELETE</td><td>Change <code>eventId</code> (or nested <code>event</code>) to move a comment; the event must exist.</td></tr>
+                            <tr><td><code>/api/messages/{id}</code></td><td>PUT, PATCH, DELETE</td><td>Reading/creating messages stays public; modifying them requires a token.</td></tr>
+                        </tbody>
+                    </table>
+                    <h3>Examples</h3>
+                    <pre><code>curl -X PUT http://localhost:5201/api/events/5 \
+  -H "Authorization: Bearer [REDACTED]" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "category": "Tech",
+    "title": "Advanced Web Workshop",
+    "description": "Deep dive into modern web development",
+    "location": "Manchester",
+    "eventDate": "2025-12-20T14:00:00",
+    "organizerId": 5,
+    "imageUrls": "https://example.com/updated.jpg"
+  }'
+
+curl -X PATCH http://localhost:5201/api/events/5 \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"title":"Updated title"}'
+
+curl -X DELETE http://localhost:5201/api/events/5 \
+  -H "Authorization: Bearer YOUR_TOKEN"</code></pre>
+                </section>
+
+                <!-- Config Endpoints -->
+                <section id="config-endpoints">
+                    <h2>Config Endpoints</h2>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method badge badge-get">GET</span>
+                            <span class="endpoint-path">/api/config</span>
+                            <span class="badge badge-auth-no">No Auth Required</span>
+                        </div>
+
+                        <h3>Database Configuration</h3>
+                        <p><strong>Use Case:</strong> Reset database, clear tables, or populate with test data during development.</p>
+
+                        <h4>Query Parameters</h4>
+                        <div class="field-list">
+                            <p><strong>action</strong> <span class="badge badge-required">required</span> - The action to perform</p>
+                        </div>
+
+                        <h3>Available Actions</h3>
+
+                        <h4>1. Reset Entire Database</h4>
+                        <p>Drops and recreates all tables (Organizers, Messages, Events, Comments, AuthTokens).</p>
+
+                        <h5>Example (cURL)</h5>
+                        <pre><code>curl "http://localhost:5201/api/config?action=reset-database"</code></pre>
+
+                        <h5>Example (.http file)</h5>
+                        <pre><code>GET http://localhost:5201/api/config?action=reset-database</code></pre>
+
+                        <h5>Response</h5>
+                        <pre><code>{
+  "message": "Database reset successfully",
+  "tables": ["Organizers", "Messages", "Events", "Comments", "AuthTokens"]
+}</code></pre>
+
+                        <h4>2. Reset Single Table</h4>
+                        <p>Drops and recreates a specific table.</p>
+                        <p><strong>Available Tables:</strong> organizers, messages, events, comments, authtokens</p>
+
+                        <h5>Example - Reset Events Table (cURL)</h5>
+                        <pre><code>curl "http://localhost:5201/api/config?action=reset-table:events"</code></pre>
+
+                        <h5>Example - Reset Organizers Table (cURL)</h5>
+                        <pre><code>curl "http://localhost:5201/api/config?action=reset-table:organizers"</code></pre>
+
+                        <h5>Example - Reset Comments Table (.http file)</h5>
+                        <pre><code>GET http://localhost:5201/api/config?action=reset-table:comments</code></pre>
+
+                        <h5>Response</h5>
+                        <pre><code>{
+  "message": "Table events reset successfully"
+}</code></pre>
+
+                        <h4>3. Populate Table with Test Data</h4>
+                        <p>Populates a table with fake data using the Bogus library.</p>
+
+                        <p><strong>Parameters:</strong></p>
+                        <ul>
+                            <li><strong>TableName</strong>: organizers, messages, events, comments, authtokens, or all</li>
+                            <li><strong>Count</strong> (optional, default: 10): Number of records to create</li>
+                        </ul>
+
+                        <h5>Example - Populate Events with 20 records (cURL)</h5>
+                        <pre><code>curl "http://localhost:5201/api/config?action=populate-table:events:20"</code></pre>
+
+                        <h5>Example - Populate Organizers with 5 records (cURL)</h5>
+                        <pre><code>curl "http://localhost:5201/api/config?action=populate-table:organizers:5"</code></pre>
+
+                        <h5>Example - Populate All Tables with 10 records each (cURL)</h5>
+                        <pre><code>curl "http://localhost:5201/api/config?action=populate-table:all:10"</code></pre>
+
+                        <h5>Example - Populate with default count (.http file)</h5>
+                        <pre><code>GET http://localhost:5201/api/config?action=populate-table:comments</code></pre>
+
+                        <h5>Response</h5>
+                        <pre><code>{
+  "message": "Populated 20 events"
+}</code></pre>
+
+                        <div class="alert alert-info">
+                            <strong>Note on "populate-table:all":</strong><br>
+                            When using <code>all</code>, the tables are populated with the following counts:<br>
+                            - Organizers: specified count<br>
+                            - Messages: specified count<br>
+                            - Events: count × 2<br>
+                            - Comments: count × 3<br>
+                            - AuthTokens: count ÷ 2 (minimum 1)
+                        </div>
+
+                        <h4>Common Workflows</h4>
+
+                        <h5>Complete Database Reset and Populate</h5>
+                        <pre><code># Reset entire database
+curl "http://localhost:5201/api/config?action=reset-database"
+
+# Populate all tables with test data
+curl "http://localhost:5201/api/config?action=populate-table:all:15"</code></pre>
+
+                        <h5>Reset and Populate Specific Table</h5>
+                        <pre><code># Reset events table
+curl "http://localhost:5201/api/config?action=reset-table:events"
+
+# Populate with 25 events
+curl "http://localhost:5201/api/config?action=populate-table:events:25"</code></pre>
+
+                        <h4>Error Responses</h4>
+
+                        <h5>400 Bad Request - Missing action</h5>
+                        <pre><code>{
+  "error": "Action parameter is required"
+}</code></pre>
+
+                        <h5>400 Bad Request - Unknown table</h5>
+                        <pre><code>{
+  "error": "Unknown table: invalid_table"
+}</code></pre>
+
+                        <h5>500 Internal Server Error</h5>
+                        <pre><code>{
+  "error": "Error message here"
+}</code></pre>
+                    </div>
+                </section>
+
+                <!-- Relationships Section -->
+                <section id="relationships">
+                    <h2>Working with Relationships</h2>
+
+                    <h3>What are Relationships?</h3>
+                    <p>In this API, some data is related to other data:</p>
+                    <ul>
+                        <li><strong>Events</strong> belong to <strong>Organizers</strong></li>
+                        <li><strong>Events</strong> have many <strong>Comments</strong></li>
+                        <li><strong>Organizers</strong> have many <strong>Events</strong></li>
+                        <li><strong>Comments</strong> belong to <strong>Events</strong></li>
+                    </ul>
+
+                    <h3>How to Load Related Data</h3>
+
+                    <div class="alert alert-info">
+                        <strong>Events Endpoints:</strong> Always includes relationships - no query parameter needed.
+                        <br>GET /api/events → Returns events with organizer and comments
+                    </div>
+
+                    <div class="alert alert-warning">
+                        <strong>Organizers & Comments Endpoints:</strong> Use withRelated query parameter to include related data.
+                        <br>GET /api/organizers?withRelated=true → Returns organizers with their events
+                    </div>
+
+                    <h3>Why Use withRelated?</h3>
+                    <p><strong>Benefits:</strong></p>
+                    <ul>
+                        <li>Get all data in one request (fewer API calls)</li>
+                        <li>Reduce network latency</li>
+                        <li>Easier to work with related data</li>
+                    </ul>
+
+                    <p><strong>When to use:</strong></p>
+                    <ul>
+                        <li>✅ When you need to display related data together</li>
+                        <li>✅ When building detailed views</li>
+                        <li>❌ When you only need basic information (saves bandwidth)</li>
+                    </ul>
+
+                    <h3>Examples</h3>
+
+                    <h4>Without Relationships (2 requests needed)</h4>
+                    <pre><code># Step 1: Get organizer
+curl http://localhost:5201/api/organizers/1 \
+  -H "Authorization: Bearer token"
+
+# Step 2: Get their events separately
+curl "http://localhost:5201/api/events?organizerId=1" \
+  -H "Authorization: Bearer token"</code></pre>
+
+                    <h4>With Relationships (1 request)</h4>
+                    <pre><code># Get organizer with events in one request
+curl "http://localhost:5201/api/organizers/1?withRelated=true" \
+  -H "Authorization: Bearer token"</code></pre>
+                </section>
+
+                <!-- Error Handling Section -->
+                <section id="errors">
+                    <h2>Error Handling</h2>
+
+                    <h3>HTTP Status Codes</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Meaning</th>
+                                <th>When It Happens</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>200</strong></td>
+                                <td>OK</td>
+                                <td>Request successful</td>
+                            </tr>
+                            <tr>
+                                <td><strong>401</strong></td>
+                                <td>Unauthorized</td>
+                                <td>Missing or invalid auth token</td>
+                            </tr>
+                            <tr>
+                                <td><strong>404</strong></td>
+                                <td>Not Found</td>
+                                <td>Requested resource doesn't exist</td>
+                            </tr>
+                            <tr>
+                                <td><strong>400</strong></td>
+                                <td>Bad Request</td>
+                                <td>Invalid request parameters</td>
+                            </tr>
+                            <tr>
+                                <td><strong>500</strong></td>
+                                <td>Internal Server Error</td>
+                                <td>Something went wrong on the server</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Common Error Scenarios</h3>
+
+                    <h4>1. Missing Authentication Token</h4>
+                    <pre><code>curl http://localhost:5201/api/events
+# Response: 401 Unauthorized</code></pre>
+                    <p><strong>Solution:</strong> Include the Authorization header</p>
+
+                    <h4>2. Invalid Token</h4>
+                    <pre><code>curl http://localhost:5201/api/events \
+  -H "Authorization: Bearer invalid-token"
+# Response: 401 Unauthorized</code></pre>
+                    <p><strong>Solution:</strong> Create a new token using POST /api/auth</p>
+
+                    <h4>3. Resource Not Found</h4>
+                    <pre><code>curl http://localhost:5201/api/events/99999 \
+  -H "Authorization: Bearer your-token"
+# Response: 404 Not Found</code></pre>
+                    <p><strong>Solution:</strong> Check that the ID exists</p>
+
+                    <h4>4. Missing Required Fields</h4>
+                    <pre><code>curl -X POST http://localhost:5201/api/events \
+  -H "Authorization: Bearer your-token" \
+  -H "Content-Type: application/json" \
+  -d '{"title": "My Event"}'
+# Response: 400 Bad Request (validation error)</code></pre>
+                    <p><strong>Solution:</strong> Include all required fields (category, description, location)</p>
+
+                    <h4>5. CORS or Wrong-Port Error</h4>
+                    <p>The API is configured to accept browser calls from <strong>any origin, port, method, and request header</strong>, so pages served by VS Code Live Server (for example <code>http://127.0.0.1:5500</code>) can call an API running on <code>http://localhost:5201</code>.</p>
+
+                    <div class="alert alert-info">
+                        <strong>If a browser call still fails, check:</strong><br>
+                        1. The API app is running.<br>
+                        2. The fetch uses the API's absolute address, not a relative <code>/api/...</code> path (a relative path goes to Live Server).<br>
+                        3. The port in the fetch address matches the port printed when the API started.<br>
+                        4. Protected endpoints include <code>Authorization: Bearer YOUR_TOKEN</code>; CORS permission does not replace authentication.<br>
+                        5. An <code>https://</code> page cannot call an <code>http://</code> API because browsers block mixed content; use matching schemes during development.
+                    </div>
+
+                </section>
+
+                <!-- Quick Reference -->
+                <section id="quick-reference">
+                    <h2>Quick Reference</h2>
+                    <div class="quick-ref">
+                        <h3>Endpoints Summary</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Endpoint</th>
+                                    <th>Method</th>
+                                    <th>Auth</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>/api/auth</code></td>
+                                    <td><span class="badge badge-post">POST</span></td>
+                                    <td><span class="badge badge-auth-no">No</span></td>
+                                    <td>Create auth token</td>
+                                </tr>
+                                <tr>
+                                    <td><code>/api/events</code></td>
+                                    <td><span class="badge badge-get">GET</span></td>
+                                    <td><span class="badge badge-auth-yes">Yes</span></td>
+                                    <td>List all events (with filters)</td>
+                                </tr>
+                                <tr>
+                                    <td><code>/api/events/{id}</code></td>
+                                    <td><span class="badge badge-get">GET</span></td>
+                                    <td><span class="badge badge-auth-yes">Yes</span></td>
+                                    <td>Get single event</td>
+                                </tr>
+                                <tr>
+                                    <td><code>/api/events</code></td>
+                                    <td><span class="badge badge-post">POST</span></td>
+                                    <td><span class="badge badge-auth-yes">Yes</span></td>
+                                    <td>Create event</td>
+                                </tr>
+                                <tr>
+                                    <td><code>/api/organizers</code></td>
+                                    <td><span class="badge badge-get">GET</span></td>
+                                    <td><span class="badge badge-auth-yes">Yes</span></td>
+                                    <td>List all organizers</td>
+                                </tr>
+                                <tr>
+                                    <td><code>/api/organizers/{id}</code></td>
+                                    <td><span class="badge badge-get">GET</span></td>
+                                    <td><span class="badge badge-auth-yes">Yes</span></td>
+                                    <td>Get single organizer</td>
+                                </tr>
+                                <tr>
+                                    <td><code>/api/organizers</code></td>
+                                    <td><span class="badge badge-post">POST</span></td>
+                                    <td><span class="badge badge-auth-yes">Yes</span></td>
+                                    <td>Create organizer</td>
+                                </tr>
+                                <tr>
+                                    <td><code>/api/comments</code></td>
+                                    <td><span class="badge badge-get">GET</span></td>
+                                    <td><span class="badge badge-auth-yes">Yes</span></td>
+                                    <td>List all comments</td>
+                                </tr>
+                                <tr>
+                                    <td><code>/api/comments/event/{id}</code></td>
+                                    <td><span class="badge badge-get">GET</span></td>
+                                    <td><span class="badge badge-auth-yes">Yes</span></td>
+                                    <td>Get comments by event</td>
+                                </tr>
+                                <tr>
+                                    <td><code>/api/comments</code></td>
+                                    <td><span class="badge badge-post">POST</span></td>
+                                    <td><span class="badge badge-auth-yes">Yes</span></td>
+                                    <td>Create comment</td>
+                                </tr>
+                                <tr>
+                                    <td><code>/api/messages</code></td>
+                                    <td><span class="badge badge-get">GET</span></td>
+                                    <td><span class="badge badge-auth-no">No</span></td>
+                                    <td>List all messages</td>
+                                </tr>
+                                <tr>
+                                    <td><code>/api/messages</code></td>
+                                    <td><span class="badge badge-post">POST</span></td>
+                                    <td><span class="badge badge-auth-no">No</span></td>
+                                    <td>Create message</td>
+                                </tr>
+                                <tr>
+                                    <td><code>/api/auth/{id}</code></td>
+                                    <td>PUT / PATCH / DELETE</td>
+                                    <td><span class="badge badge-auth-yes">Yes</span></td>
+                                    <td>Update or delete auth token</td>
+                                </tr>
+                                <tr>
+                                    <td><code>/api/events/{id}</code></td>
+                                    <td>PUT / PATCH / DELETE</td>
+                                    <td><span class="badge badge-auth-yes">Yes</span></td>
+                                    <td>Update or delete event</td>
+                                </tr>
+                                <tr>
+                                    <td><code>/api/organizers/{id}</code></td>
+                                    <td>PUT / PATCH / DELETE</td>
+                                    <td><span class="badge badge-auth-yes">Yes</span></td>
+                                    <td>Update or delete organizer</td>
+                                </tr>
+                                <tr>
+                                    <td><code>/api/comments/{id}</code></td>
+                                    <td>PUT / PATCH / DELETE</td>
+                                    <td><span class="badge badge-auth-yes">Yes</span></td>
+                                    <td>Update or delete comment</td>
+                                </tr>
+                                <tr>
+                                    <td><code>/api/messages/{id}</code></td>
+                                    <td>PUT / PATCH / DELETE</td>
+                                    <td><span class="badge badge-auth-yes">Yes</span></td>
+                                    <td>Update or delete message</td>
+                                </tr>
+                                <tr>
+                                    <td><code>/api/config</code></td>
+                                    <td><span class="badge badge-get">GET</span></td>
+                                    <td><span class="badge badge-auth-no">No</span></td>
+                                    <td>Database operations</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3>Key Concepts</h3>
+                    <ul>
+                        <li><strong>Authentication:</strong> Required for Events, Organizers, and Comments, plus every update/delete action (including AuthTokens and Messages). Any valid token works - there are no roles or ownership checks.</li>
+                        <li><strong>Relationships:</strong> Use <code>withRelated</code> param for Organizers and Comments; Events always include relationships</li>
+                        <li><strong>Filtering:</strong> Events support category, title, description, location, and search params</li>
+                        <li><strong>Error Handling:</strong> Check HTTP status codes and handle 401, 404, 400 appropriately</li>
+                        <li><strong>Development:</strong> Use Config endpoint to reset and populate database with test data</li>
+                    </ul>
+                </section>
+            </main>
+
+            <footer>
+                <p><strong>SOFT20181 - Events API Documentation</strong></p>
+                <p>For questions or issues, consult your lab tutor or check the built-in API documentation at /api-docs</p>
+            </footer>
+
+            <a href="#" class="back-to-top" title="Back to top">↑</a>
+        </div>
+    </div>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Show/hide back to top button
+        const backToTop = document.querySelector('.back-to-top');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTop.style.display = 'flex';
+            } else {
+                backToTop.style.display = 'none';
+            }
+        });
+
+        // Mobile menu toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        if (menuToggle) {
+            menuToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('open');
+            });
+        }
+
+        // Highlight active nav link on scroll
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.sidebar nav a');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollY >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
