@@ -44,7 +44,11 @@ body {
     gap: 1em;
     animation: spin 30s infinite linear;
     padding-right:1em;
-    
+    flex: 0 0 auto;
+}
+
+#carousel:has(.carousel-card:hover) .group{
+    animation-play-state:paused;
 }
 
 .carousel-card{
@@ -56,6 +60,15 @@ body {
     border-radius: .2rem;
     text-align: center;
     align-content: center;
+    position: relative;
+    transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.carousel-card:hover{
+    transform: scale(1.06);
+    z-index: 1;
+    box-shadow: 0 8px 20px rgb(0 0 0 / 25%);
+    cursor: pointer;
 }
 
 @keyframes spin{
