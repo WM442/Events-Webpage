@@ -29,10 +29,15 @@ body {
     font-family: AppleGothic;
 }
 
+.site-logo{
+    width:160px;
+    height: auto;
+}
+
 .carousel{
     margin: 100px auto;
     width: 90%;
-    border: 5px solid red;
+    border: 5px solid darkgray;
     display: flex;
     overflow: hidden;
 }
@@ -74,4 +79,11 @@ body {
 @keyframes spin{
     from {translate: 0;}
     to {translate: -100%}
+}
+
+footer {
+  text-align: center;
+  padding: 3px;
+  background-color: lightslategray;
+  color: white;
 }
