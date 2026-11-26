@@ -19,6 +19,7 @@
     <title>Event App</title>
 </head>
 
+<!-- Navigation bar -->
 <header>
     <div class="navbar bg-base-100">
         <div class="flex-1">
@@ -36,7 +37,7 @@
 <!-- Hero Section -->
 <div class="hero min-h-48 bg-base-200">
     <div class="hero-content text-center">
-        <div class="max-w-md mb-4">
+         <div class="text-center lg:text-left mb-4">
             <h1 class="text-5xl font-bold">Welcome to Eventix</h1>
             <p class="py-6">Discover, create, and manage amazing events. Join thousands of users who trust our platform
                 for seamless event planning and coordination.</p>
@@ -44,9 +45,14 @@
                 Get Started
             </a>
         </div>
+        <div>
+            <img src="placeholder.jpg" class="rounded-box w-full max-w-sm">
+            Hero picture
+        </div>
     </div>
 </div>
 
+<!-- Carousel events section -->
 <div class="carousel" id="carousel">
     <div class="group">
         <div class="carousel-card">1</div>
@@ -65,6 +71,20 @@
         <div class="carousel-card">6</div>
     </div>
 </div>
+
+<!-- Section about page -->
+<section class="bg-base-200 py-8" aria-labelledby="about-title">
+    <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+        <div class="rounded-box border-2 border-dashed border-gray-400 bg-base-300 h-56 flex items-center justify-center text-gray-500">
+            Section image
+        </div>
+        <article>
+            <h2 id="about-title" class="text-3x1 font bold mb-4"> About section</h2>
+            <p class="mb-4">Text about site</p>
+            <a class="link" href="contact.html">Heres to contact us</a>
+        </article>
+    </div>
+</section>
 
 <!-- Info Section -->
 <section class="container mx-auto px-4 py-8">
@@ -100,6 +120,7 @@
 <footer>
   <p>Made by William Martin<br>
   <a href="N1375366@my.ntu.ac.uk">N1375366@my.ntu.ac.uk</a></p>
+  <a class="link" href="contact.html">Contact Us</a>
 </footer>
 
 

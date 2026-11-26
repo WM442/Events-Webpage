@@ -1,4 +1,4 @@
-/*
+
 function buildCard(id, title, imageURL){
     return `
     <div class="card bg-base-100 w-96 shadow-sm">
@@ -34,4 +34,3 @@ function buildAPICards() {
 
 let dynamicContent = document.querySelector('#dynamic-content');
 buildAPICards();
-*/

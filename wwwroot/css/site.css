@@ -20,7 +20,7 @@ body {
 
 
 .btn-ntu {
-    background-color: deeppink;
+    background-color: cornflowerblue;
     color: white;
 }
 
@@ -58,7 +58,7 @@ body {
 
 .carousel-card{
     flex: 0 0 5em;
-    height: 5em;
+    height: 4.5em;
     padding: 1em;
     background: cornflowerblue;
     font-size: 3rem;
@@ -84,6 +84,6 @@ body {
 footer {
   text-align: center;
   padding: 3px;
-  background-color: lightslategray;
+  background-color: cornflowerblue;
   color: white;
 }
